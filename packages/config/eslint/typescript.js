@@ -32,8 +32,7 @@ export default function typescript(
         languageOptions: {
             parserOptions: {
                 projectService: true,
-                tsconfigRootDir: dir,
-                project: join(dir, './tsconfig.lint.json')
+                tsconfigRootDir: dir
             }
         }
     })

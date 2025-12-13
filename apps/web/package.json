@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
-        "dev": "next dev --turbopack",
+        "dev": "next dev --turbopack --experimental-https",
         "build": "next build && cp -r .next/static .next/standalone/apps/web/.next/static && cp -r public .next/standalone/apps/web/public",
         "start": "next start",
         "lint": "next lint",
@@ -29,6 +29,7 @@
         "@vitejs/plugin-react": "^5.1.2",
         "@vitest/ui": "4.0.8",
         "config": "workspace:*",
+        "daisyui": "^5.5.13",
         "eslint": "^9.39.2",
         "jsdom": "^27.3.0",
         "tailwindcss": "^4.1.18",
