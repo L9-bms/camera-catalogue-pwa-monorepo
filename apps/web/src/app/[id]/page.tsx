@@ -1,14 +1,13 @@
 import { api } from '@libs'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
-interface CameraDetailProps {
+interface Props {
     params: Promise<{
         id: string
     }>
 }
 
-export default async function CameraDetail({ params }: CameraDetailProps) {
+export default async function CameraPage({ params }: Props) {
     const { id } = await params
 
     const cameraResponse = await api.cameras({ id }).get()
@@ -20,15 +19,22 @@ export default async function CameraDetail({ params }: CameraDetailProps) {
     const specs = [
         { label: 'Brand', value: data.brand },
         { label: 'Sensor', value: data.sensor || 'Not specified' },
-        { label: 'Megapixels', value: data.megapixels ? `${data.megapixels} MP` : 'Not specified' },
-        { label: 'Price', value: data.price ? `$${data.price.toLocaleString()}` : 'Not available' }
+        {
+            label: 'Megapixels',
+            value: data.megapixels ? `${data.megapixels} MP` : 'Not specified'
+        },
+        {
+            label: 'Price',
+            value: data.price
+                ? `$${data.price.toLocaleString()}`
+                : 'Not available'
+        }
     ]
 
     return (
         <div className="min-h-screen">
-            {/* Hero Section */}
-            <div className="hero min-h-[60vh] bg-base-200">
-                <div className="hero-content flex-col lg:flex-row gap-8 max-w-6xl">
+            <div className="hero py-8 bg-base-300">
+                <div className="hero-content flex-col lg:flex-row gap-12 max-w-6xl">
                     <div className="flex-1">
                         {data.image ? (
                             // eslint-disable-next-line @next/next/no-img-element
@@ -46,7 +52,7 @@ export default async function CameraDetail({ params }: CameraDetailProps) {
                         )}
                     </div>
                     <div className="flex-1">
-                        <h1 className="text-4xl font-bold mb-8">{data.name}</h1>
+                        <h1 className="text-4xl font-bold mb-4">{data.name}</h1>
                         {data.price && (
                             <div className="text-2xl">
                                 ${data.price.toLocaleString()}
@@ -55,22 +61,23 @@ export default async function CameraDetail({ params }: CameraDetailProps) {
                     </div>
                 </div>
             </div>
-
-            {/* Specs Section */}
             <div className="container mx-auto px-4 py-12">
-                <h2 className="text-3xl font-bold mb-8">Specifications</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {specs.map((spec) => (
-                        <div key={spec.label} className="card bg-base-100 shadow">
-                            <div className="card-body">
-                                <h3 className="card-title text-lg">{spec.label}</h3>
-                                <p className="text-base-content/70">{spec.value}</p>
-                            </div>
-                        </div>
-                    ))}
+                <h2 className="text-3xl font-bold mb-8">
+                    Technical Specifications
+                </h2>
+                <div className="overflow-x-auto">
+                    <table className="table table-bordered">
+                        <tbody>
+                            {specs.map((spec) => (
+                                <tr key={spec.label}>
+                                    <th>{spec.label}</th>
+                                    <td>{spec.value}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     )
 }
-

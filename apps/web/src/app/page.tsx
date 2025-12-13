@@ -2,7 +2,7 @@ import { api } from '@libs'
 import Link from 'next/link'
 import { FilterControls } from './_components/filter-controls'
 
-interface LandingProps {
+interface Props {
     searchParams: Promise<{
         brand?: string
         sensor?: string
@@ -11,7 +11,7 @@ interface LandingProps {
     }>
 }
 
-export default async function Landing({ searchParams }: LandingProps) {
+export default async function HomePage({ searchParams }: Props) {
     const resolvedParams = await searchParams
 
     const camerasResponse = await api.cameras.get({
@@ -45,20 +45,12 @@ export default async function Landing({ searchParams }: LandingProps) {
                         {data.map((camera) => (
                             <div key={camera.id} className="card">
                                 <figure>
-                                    {camera.image ? (
-                                        // eslint-disable-next-line @next/next/no-img-element
-                                        <img
-                                            src={camera.image}
-                                            alt={camera.name}
-                                            className="h-48 w-full object-cover"
-                                        />
-                                    ) : (
-                                        <div className="h-48 w-full bg-base-300 flex items-center justify-center">
-                                            <span className="text-base-content/50">
-                                                No image
-                                            </span>
-                                        </div>
-                                    )}
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                        src={camera.image}
+                                        alt={camera.name}
+                                        className="h-48 w-full object-cover"
+                                    />
                                 </figure>
                                 <div className="card-body">
                                     <h2 className="card-title">
@@ -70,9 +62,7 @@ export default async function Landing({ searchParams }: LandingProps) {
 
                                     <div className="card-actions justify-between items-center">
                                         <span className="text-2xl font-bold">
-                                            {camera.price
-                                                ? `$${camera.price.toLocaleString()}`
-                                                : 'Price not available'}
+                                            ${camera.price.toLocaleString()}
                                         </span>
                                         <Link
                                             href={`/${camera.id}`}

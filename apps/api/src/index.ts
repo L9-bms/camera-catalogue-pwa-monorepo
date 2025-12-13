@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia'
 import { openapi, fromTypes } from '@elysiajs/openapi'
 import { cors } from '@elysiajs/cors'
-import { eq, asc, desc, ilike, or, and } from 'drizzle-orm'
+import { eq, ilike, or, and, SQL, sql } from 'drizzle-orm'
 
 import { otel } from '@api/modules'
 import { drizzle } from 'drizzle-orm/node-postgres'
@@ -28,93 +28,44 @@ export const app = new Elysia()
     .get(
         '/cameras',
         async ({ query }) => {
-            // Build where conditions
-            const whereConditions = []
+            const filters: SQL[] = []
+            if (query.brand) filters.push(eq(cameraTable.brand, query.brand))
+            if (query.sensor) filters.push(eq(cameraTable.sensor, query.sensor))
 
-            // Add search condition if provided
-            if (query.search) {
-                const searchPattern = `%${query.search}%`
-                whereConditions.push(
-                    or(
-                        ilike(cameraTable.name, searchPattern),
-                        ilike(cameraTable.brand, searchPattern)
-                    )!
-                )
-            }
-
-            // Add brand filter if provided
-            if (query.brand) {
-                whereConditions.push(eq(cameraTable.brand, query.brand))
-            }
-
-            // Add sensor filter if provided
-            if (query.sensor) {
-                whereConditions.push(eq(cameraTable.sensor, query.sensor))
-            }
-
-            // Combine where conditions
-            const whereClause =
-                whereConditions.length === 0
-                    ? undefined
-                    : whereConditions.length === 1
-                      ? whereConditions[0]
-                      : whereConditions.reduce((acc, condition) =>
-                            acc ? and(acc, condition)! : condition
-                        )
-
-            // Build order by clause if sortBy is provided
-            let orderByClause
-            if (query.sortBy) {
-                const sortOrder = query.sortOrder === 'desc' ? desc : asc
-                if (query.sortBy === 'price') {
-                    orderByClause = sortOrder(cameraTable.price)
-                } else if (query.sortBy === 'megapixels') {
-                    orderByClause = sortOrder(cameraTable.megapixels)
-                } else if (query.sortBy === 'name') {
-                    orderByClause = sortOrder(cameraTable.name)
-                } else if (query.sortBy === 'brand') {
-                    orderByClause = sortOrder(cameraTable.brand)
-                }
-            }
-
-            // Build and execute the query
-            if (whereClause && orderByClause) {
-                return await db
-                    .select()
-                    .from(cameraTable)
-                    .where(whereClause)
-                    .orderBy(orderByClause)
-            } else if (whereClause) {
-                return await db.select().from(cameraTable).where(whereClause)
-            } else if (orderByClause) {
-                return await db
-                    .select()
-                    .from(cameraTable)
-                    .orderBy(orderByClause)
-            }
-            return await db.select().from(cameraTable)
+            return await db
+                .select()
+                .from(cameraTable)
+                .where(and(...filters))
+                // sql injection? who's sql and why are they being injected?
+                .orderBy(sql.raw(`${query.sortBy} ${query.sortOrder}`))
         },
         {
             query: t.Object({
                 brand: t.Optional(t.String()),
                 sensor: t.Optional(t.String()),
-                sortBy: t.Optional(t.String()),
-                sortOrder: t.Optional(
-                    t.Union([t.Literal('asc'), t.Literal('desc')])
+                sortBy: t.Union(
+                    [
+                        t.Literal('price'),
+                        t.Literal('megapixels'),
+                        t.Literal('name'),
+                        t.Literal('brand')
+                    ],
+                    {
+                        default: 'brand'
+                    }
                 ),
-                search: t.Optional(t.String())
+                sortOrder: t.Union([t.Literal('asc'), t.Literal('desc')], {
+                    default: 'asc'
+                })
             })
         }
     )
     .get(
         '/cameras/search',
         async ({ query }) => {
-            if (!query.q || query.q.trim().length < 2) {
-                return []
-            }
-
             const searchPattern = `%${query.q.trim()}%`
-            const cameras = await db
+
+            return await db
                 .select({
                     id: cameraTable.id,
                     name: cameraTable.name
@@ -127,12 +78,10 @@ export const app = new Elysia()
                     )
                 )
                 .limit(10)
-
-            return cameras
         },
         {
             query: t.Object({
-                q: t.String()
+                q: t.String({ minLength: 2 })
             })
         }
     )
@@ -164,7 +113,7 @@ export const app = new Elysia()
                 .limit(1)
 
             if (camera.length === 0) {
-                throw new Error('Camera not found')
+                throw new Error('not found')
             }
 
             return camera[0]

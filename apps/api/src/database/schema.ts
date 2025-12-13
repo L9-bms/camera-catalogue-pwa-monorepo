@@ -4,10 +4,10 @@ export const cameraTable = pgTable('camera', {
     id: varchar('id').primaryKey(),
     name: varchar('name').notNull(),
     brand: varchar('brand').notNull(),
-    price: integer('price'),
-    megapixels: integer('megapixels'),
-    sensor: varchar('sensor'),
-    image: varchar('image')
+    price: integer('price').notNull(),
+    megapixels: integer('megapixels').notNull(),
+    sensor: varchar('sensor').notNull(),
+    image: varchar('image').notNull()
 })
 
 export type CameraTable = typeof cameraTable
