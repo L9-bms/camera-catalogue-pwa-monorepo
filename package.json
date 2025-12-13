@@ -1,0 +1,33 @@
+{
+    "name": "kozeki",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "bun scripts/run dev",
+        "build": "bun scripts/run build",
+        "test": "bun scripts/run test",
+        "test:unit": "bun scripts/run test:unit",
+        "coverage": "bun scripts/run coverage",
+        "test:e2e": "bun scripts/run test:e2e",
+        "lint": "bun scripts/run lint",
+        "docker": "bun scripts/run docker",
+        "storybook": "bun scripts/run storybook"
+    },
+    "workspaces": {
+        "catalog": {
+            "@types/react": "^19.2.0",
+            "@types/react-dom": "^19.2.0",
+            "elysia": "1.4.15",
+            "react": "^19.2.0",
+            "react-dom": "^19.2.0"
+        },
+        "packages": [
+            "apps/*",
+            "packages/*"
+        ]
+    },
+    "devDependencies": {
+        "@types/bun": "^1.3.2",
+        "concurrently": "^9.2.0"
+    }
+}
