@@ -15,7 +15,7 @@ const data = [
         price: 3899,
         megapixels: 45,
         sensor: 'Full Frame',
-        image: 'https://www.canon.com.au/-/media/images/canon/products/eos-r5/eos-r5-body-front.png'
+        image: 'https://www.canon.com.au/-/media/images/canon/products/mirrorless-cameras/eos-r5-temp/1400x960-eos-r5-body-front.ashx'
     },
     {
         id: 'canon-eos-m50-mark-ii',
@@ -24,7 +24,7 @@ const data = [
         price: 779,
         megapixels: 24,
         sensor: 'APS-C',
-        image: 'https://www.canon-europe.com/media/eos-m50-mark-ii_1240x620.png'
+        image: 'https://www.photoreview.com.au/wp-content/uploads/2021/04/Canon-EOS-M50-Mark-II_FrontSlantLeft_M15-45_sml.jpg'
     },
     {
         id: 'sony-a7-v',
@@ -33,7 +33,7 @@ const data = [
         price: 2899,
         megapixels: 33,
         sensor: 'Full Frame',
-        image: 'https://www.sony.com/image/sony-a7v-mirrorless-camera.png'
+        image: 'https://i0.wp.com/briansmith.com/wp-content/uploads/2025/12/Sony-a7V-camera-1.jpg'
     },
     {
         id: 'sony-a6400',
@@ -42,7 +42,7 @@ const data = [
         price: 898,
         megapixels: 24,
         sensor: 'APS-C',
-        image: 'https://www.sony.com/image/sony-a6400-body.png'
+        image: 'https://www.diamondscamera.com.au/Images/ProductImages/Medium/sony-a6400-16-50mm-01.jpg'
     },
     {
         id: 'nikon-z6-ii',
@@ -51,7 +51,7 @@ const data = [
         price: 1999,
         megapixels: 24,
         sensor: 'Full Frame',
-        image: 'https://cdn.nikonimg.com/products/nikon-z6-ii-front.png'
+        image: 'https://www.leedervillecameras.com.au/wp-content/uploads/2021/10/large_32140_yJku6G8xDIhXSBOYPt530WM4o1jCAU.jpg'
     },
     {
         id: 'nikon-z8',
@@ -60,7 +60,7 @@ const data = [
         price: 3999,
         megapixels: 45,
         sensor: 'Full Frame',
-        image: 'https://cdn.nikonimg.com/products/nikon-z8-body.png'
+        image: 'https://m.media-amazon.com/images/I/61gdpDwNEGL.jpg'
     },
     {
         id: 'fujifilm-x-t5',
@@ -69,7 +69,7 @@ const data = [
         price: 1699,
         megapixels: 40,
         sensor: 'APS-C',
-        image: 'https://fujifilm-x.com/images/products/x-t5_front.png'
+        image: 'https://m.media-amazon.com/images/I/81ynTTGy+lL.jpg'
     },
     {
         id: 'fujifilm-x100vi',
@@ -78,7 +78,7 @@ const data = [
         price: 1599,
         megapixels: 40,
         sensor: 'APS-C',
-        image: 'https://fujifilm-x.com/images/products/x100vi_black.png'
+        image: 'https://www.dpreview.com/files/p/articles/0046017017/Fujifilm_X100VI_Front.jpeg'
     },
     {
         id: 'panasonic-lumix-gh6',
@@ -87,7 +87,7 @@ const data = [
         price: 2199,
         megapixels: 25,
         sensor: 'MFT',
-        image: 'https://www.panasonic.com/images/lumix-gh6-front.png'
+        image: 'https://www.camera-warehouse.com.au/media/catalog/product/2/_/2_6_2_4_1.jpeg'
     },
     {
         id: 'om-system-om-1',
@@ -96,7 +96,7 @@ const data = [
         price: 2199,
         megapixels: 20,
         sensor: 'MFT',
-        image: 'https://www.om-system.com/images/om-1-front.png'
+        image: 'https://www.dpreview.com/files/p/articles/1570844542/OM_System_OM-1.jpeg'
     },
     {
         id: 'leica-q3',
@@ -105,7 +105,7 @@ const data = [
         price: 5995,
         megapixels: 60,
         sensor: 'Full Frame',
-        image: 'https://us.leica-camera.com/media/leica-q3-product-line.png'
+        image: 'https://www.cameraelectronic.com.au/cdn/shop/files/19080_Leica_Q3_hero_plate_LoRes_RGB_1024x1024.jpg'
     },
     {
         id: 'pentax-k-3-mark-iii',
@@ -114,7 +114,7 @@ const data = [
         price: 1799,
         megapixels: 26,
         sensor: 'APS-C',
-        image: 'https://www.ricoh-imaging.co.jp/images/pentax-k-3-iii-body.png'
+        image: 'https://pentax.com.au/product_image/ts1681358852/r_900x/1196/pentax-k-3-iii-dslr-monochrome-dslr-camera--body-only-.jpg'
     },
     {
         id: 'canon-eos-r6-mark-ii',
@@ -123,7 +123,7 @@ const data = [
         price: 2499,
         megapixels: 24,
         sensor: 'Full Frame',
-        image: 'https://www.canon.com.au/-/media/images/canon/products/eos-r6-mark-ii/eos-r6-mark-ii-front.png'
+        image: 'https://www.canon.com.au/-/media/images/canon/products/mirrorless-cameras/eos-r6-mark-ii/hero-image-eos-r6-mark-ii.ashx'
     }
 ]
 
