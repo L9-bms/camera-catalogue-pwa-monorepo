@@ -1,8 +1,13 @@
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { openapi, fromTypes } from '@elysiajs/openapi'
 import { cors } from '@elysiajs/cors'
+import { eq, asc, desc } from 'drizzle-orm'
 
 import { otel } from '@api/modules'
+import { drizzle } from 'drizzle-orm/node-postgres'
+import { cameraTable } from './database/schema'
+
+const db = drizzle(process.env.DATABASE_URL!)
 
 export const app = new Elysia()
     .use(
@@ -20,76 +25,79 @@ export const app = new Elysia()
             origin: 'http://localhost:3000'
         })
     )
-    .get('/cameras', () => {
-        interface Camera {
-            id: number
-            name: string
-            brand: string
-            price: number
-            megapixels: number
-            sensor: string
-            image: string
-        }
+    .get(
+        '/cameras',
+        async ({ query }) => {
+            // Build query conditionally
+            let cameras
 
-        const cameras: Camera[] = [
-            {
-                id: 1,
-                name: 'EOS R5',
-                brand: 'Canon',
-                price: 3899,
-                megapixels: 45,
-                sensor: 'Full Frame',
-                image: 'https://images.unsplash.com/photo-1606933248051-5ce98adc2db4?w=400&h=400&fit=crop'
-            },
-            {
-                id: 2,
-                name: 'Z9',
-                brand: 'Nikon',
-                price: 5496,
-                megapixels: 45.7,
-                sensor: 'Full Frame',
-                image: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&h=400&fit=crop'
-            },
-            {
-                id: 3,
-                name: 'Alpha 7R V',
-                brand: 'Sony',
-                price: 3198,
-                megapixels: 61,
-                sensor: 'Full Frame',
-                image: 'https://images.unsplash.com/photo-1606986628025-35d57e735ae0?w=400&h=400&fit=crop'
-            },
-            {
-                id: 4,
-                name: 'GFX 100 II',
-                brand: 'Fujifilm',
-                price: 5800,
-                megapixels: 102,
-                sensor: 'Medium Format',
-                image: 'https://images.unsplash.com/photo-1609034227505-5876f6aa4e90?w=400&h=400&fit=crop'
-            },
-            {
-                id: 5,
-                name: 'S1R',
-                brand: 'Panasonic',
-                price: 2498,
-                megapixels: 47.3,
-                sensor: 'Full Frame',
-                image: 'https://images.unsplash.com/photo-1606771563261-38c75010e6c9?w=400&h=400&fit=crop'
-            },
-            {
-                id: 6,
-                name: 'K-3 Mark III',
-                brand: 'Pentax',
-                price: 1529.99,
-                megapixels: 25.7,
-                sensor: 'APS-C',
-                image: 'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&h=400&fit=crop'
+            if (query.brand && query.sortBy) {
+                const sortOrder = query.sortOrder === 'desc' ? desc : asc
+
+                let orderByClause
+                if (query.sortBy === 'price') {
+                    orderByClause = sortOrder(cameraTable.price)
+                } else if (query.sortBy === 'megapixels') {
+                    orderByClause = sortOrder(cameraTable.megapixels)
+                } else if (query.sortBy === 'name') {
+                    orderByClause = sortOrder(cameraTable.name)
+                } else if (query.sortBy === 'brand') {
+                    orderByClause = sortOrder(cameraTable.brand)
+                } else {
+                    cameras = await db
+                        .select()
+                        .from(cameraTable)
+                        .where(eq(cameraTable.brand, query.brand))
+                    return cameras
+                }
+
+                cameras = await db
+                    .select()
+                    .from(cameraTable)
+                    .where(eq(cameraTable.brand, query.brand))
+                    .orderBy(orderByClause)
+            } else if (query.brand) {
+                cameras = await db
+                    .select()
+                    .from(cameraTable)
+                    .where(eq(cameraTable.brand, query.brand))
+            } else if (query.sortBy) {
+                const sortOrder = query.sortOrder === 'desc' ? desc : asc
+
+                let orderByClause
+                if (query.sortBy === 'price') {
+                    orderByClause = sortOrder(cameraTable.price)
+                } else if (query.sortBy === 'megapixels') {
+                    orderByClause = sortOrder(cameraTable.megapixels)
+                } else if (query.sortBy === 'name') {
+                    orderByClause = sortOrder(cameraTable.name)
+                } else if (query.sortBy === 'brand') {
+                    orderByClause = sortOrder(cameraTable.brand)
+                } else {
+                    cameras = await db.select().from(cameraTable)
+                    return cameras
+                }
+
+                cameras = await db
+                    .select()
+                    .from(cameraTable)
+                    .orderBy(orderByClause)
+            } else {
+                cameras = await db.select().from(cameraTable)
             }
-        ]
 
-        return cameras
-    })
+            return cameras
+        },
+        {
+            query: t.Object({
+                brand: t.Optional(t.String()),
+                sortBy: t.Optional(t.String()),
+                sortOrder: t.Optional(
+                    t.Union([t.Literal('asc'), t.Literal('desc')])
+                )
+            })
+        }
+    )
     .listen(Bun.env.PORT ?? 3001)
 
 process.on('beforeExit', app.stop)
