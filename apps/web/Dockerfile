@@ -12,7 +12,6 @@ COPY bun.lock bun.lock
 COPY apps/web/package.json apps/web/package.json
 COPY apps/api/package.json apps/api/package.json
 COPY packages/libs/package.json packages/libs/package.json
-COPY packages/ui/package.json packages/ui/package.json
 COPY packages/config/package.json packages/config/package.json
 
 RUN bun install
@@ -20,7 +19,6 @@ RUN bun install
 COPY apps/web apps/web
 COPY apps/api apps/api
 COPY packages/libs packages/libs
-COPY packages/ui packages/ui
 COPY packages/config packages/config
 
 ENV NODE_ENV=production

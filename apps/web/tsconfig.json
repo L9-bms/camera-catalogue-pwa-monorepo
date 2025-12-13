@@ -26,10 +26,6 @@
             "@api/*": ["../api/src/*"],
             "@libs": ["../../packages/libs/src/index.ts"],
             "@libs/*": ["../../packages/libs/src/*"],
-            "@ui": ["../../packages/ui/src/index.ts"],
-            "@ui/*": ["../../packages/ui/src/*"],
-            "@ui/components": ["../../packages/ui/src/components/index.ts"],
-            "@ui/layouts": ["../../packages/ui/src/layouts/index.ts"]
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

@@ -10,8 +10,7 @@
         "coverage": "bun scripts/run coverage",
         "test:e2e": "bun scripts/run test:e2e",
         "lint": "bun scripts/run lint",
-        "docker": "bun scripts/run docker",
-        "storybook": "bun scripts/run storybook"
+        "docker": "bun scripts/run docker"
     },
     "workspaces": {
         "catalog": {
@@ -27,7 +26,7 @@
         ]
     },
     "devDependencies": {
-        "@types/bun": "^1.3.2",
-        "concurrently": "^9.2.0"
+        "@types/bun": "^1.3.4",
+        "concurrently": "^9.2.1"
     }
 }
