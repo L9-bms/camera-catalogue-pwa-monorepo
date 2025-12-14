@@ -3,5 +3,6 @@
     themes:
         nord --default,
         black --prefersdark;
+    exclude: properties;
 }
 @source "../**/*.{ts,tsx}";

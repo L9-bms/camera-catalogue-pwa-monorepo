@@ -1,0 +1,24 @@
+:80 {
+	# Reverse proxy for API
+	handle_path /api {
+		reverse_proxy api:3001
+	}
+
+	# Reverse proxy for web app
+	handle {
+		reverse_proxy web:3000
+	}
+}
+
+# Uncomment below for HTTPS with automatic cert generation
+# example.com {
+# 	# Reverse proxy for API
+# 	handle_path /api/* {
+# 		reverse_proxy api:3001
+# 	}
+#
+# 	# Reverse proxy for web app
+# 	handle {
+# 		reverse_proxy web:3000
+# 	}
+# }

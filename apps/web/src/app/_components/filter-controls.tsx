@@ -40,10 +40,11 @@ export function FilterControls({
             <div className="flex flex-col gap-4">
                 <h2 className="text-xl font-semibold mb-2">Sort</h2>
                 <div className="form-control">
-                    <label className="label">
+                    <label className="label" htmlFor="sortBy">
                         <span className="label-text">Sort by</span>
                     </label>
                     <select
+                        id="sortBy"
                         className="select select-bordered w-full"
                         value={currentSortBy || 'name'}
                         onChange={(e) => updateParams('sortBy', e.target.value)}
@@ -54,10 +55,11 @@ export function FilterControls({
                     </select>
                 </div>
                 <div className="form-control">
-                    <label className="label">
+                    <label className="label" htmlFor="sortOrder">
                         <span className="label-text">Order</span>
                     </label>
                     <select
+                        id="sortOrder"
                         className="select select-bordered w-full"
                         value={currentSortOrder || 'asc'}
                         onChange={(e) =>
@@ -76,11 +78,12 @@ export function FilterControls({
             <div className="flex flex-col gap-4">
                 <h2 className="text-xl font-semibold mb-2">Filter</h2>
                 <div className="form-control">
-                    <label className="label">
+                    <label className="label" htmlFor="brand">
                         <span className="label-text">Brand</span>
                     </label>
 
                     <select
+                        id="brand"
                         className="select select-bordered w-full"
                         value={currentBrand || ''}
                         onChange={(e) => updateParams('brand', e.target.value)}
@@ -96,10 +99,11 @@ export function FilterControls({
                     </select>
                 </div>
                 <div className="form-control">
-                    <label className="label">
+                    <label className="label" htmlFor="sensor">
                         <span className="label-text">Sensor Type</span>
                     </label>
                     <select
+                        id="sensor"
                         className="select select-bordered w-full"
                         value={currentSensor || ''}
                         onChange={(e) => updateParams('sensor', e.target.value)}
