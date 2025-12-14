@@ -5,7 +5,7 @@ import { eq, ilike, or, and, SQL, sql } from 'drizzle-orm'
 
 import { otel } from '@api/modules'
 import { drizzle } from 'drizzle-orm/node-postgres'
-import { cameraTable } from './database/schema'
+import { cameraTable, brandTable, sensorTable } from './database/schema'
 
 const db = drizzle(process.env.DATABASE_URL!)
 
@@ -29,15 +29,29 @@ export const app = new Elysia()
         '/cameras',
         async ({ query }) => {
             const filters: SQL[] = []
-            if (query.brand) filters.push(eq(cameraTable.brand, query.brand))
-            if (query.sensor) filters.push(eq(cameraTable.sensor, query.sensor))
+            if (query.brand) filters.push(eq(cameraTable.brand_id, query.brand))
+            if (query.sensor)
+                filters.push(eq(cameraTable.sensor_id, query.sensor))
 
             return await db
-                .select()
+                .select({
+                    id: cameraTable.id,
+                    name: cameraTable.name,
+                    brand: brandTable.name,
+                    sensor: sensorTable.name,
+                    price: cameraTable.price,
+                    megapixels: cameraTable.megapixels,
+                    image: cameraTable.image
+                })
                 .from(cameraTable)
+                .leftJoin(brandTable, eq(cameraTable.brand_id, brandTable.id))
+                .leftJoin(
+                    sensorTable,
+                    eq(cameraTable.sensor_id, sensorTable.id)
+                )
                 .where(and(...filters))
                 // sql injection? who's sql and why are they being injected?
-                .orderBy(sql.raw(`${query.sortBy} ${query.sortOrder}`))
+                .orderBy(sql.raw(`"camera".${query.sortBy} ${query.sortOrder}`))
         },
         {
             query: t.Object({
@@ -47,11 +61,10 @@ export const app = new Elysia()
                     [
                         t.Literal('price'),
                         t.Literal('megapixels'),
-                        t.Literal('name'),
-                        t.Literal('brand')
+                        t.Literal('name')
                     ],
                     {
-                        default: 'brand'
+                        default: 'name'
                     }
                 ),
                 sortOrder: t.Union([t.Literal('asc'), t.Literal('desc')], {
@@ -74,7 +87,7 @@ export const app = new Elysia()
                 .where(
                     or(
                         ilike(cameraTable.name, searchPattern),
-                        ilike(cameraTable.brand, searchPattern)
+                        ilike(cameraTable.brand_id, searchPattern)
                     )
                 )
                 .limit(10)
@@ -87,28 +100,39 @@ export const app = new Elysia()
     )
     .get('/cameras/brands', async () => {
         const brands = await db
-            .selectDistinct({ brand: cameraTable.brand })
-            .from(cameraTable)
-            .orderBy(cameraTable.brand)
+            .select({ id: brandTable.id, name: brandTable.name })
+            .from(brandTable)
+            .orderBy(brandTable.name)
 
-        return brands.map((b) => b.brand)
+        return brands
     })
     .get('/cameras/sensors', async () => {
         const sensors = await db
-            .selectDistinct({ sensor: cameraTable.sensor })
-            .from(cameraTable)
-            .orderBy(cameraTable.sensor)
+            .select({ id: sensorTable.id, name: sensorTable.name })
+            .from(sensorTable)
+            .orderBy(sensorTable.name)
 
         return sensors
-            .map((s) => s.sensor)
-            .filter((sensor): sensor is string => sensor !== null)
     })
     .get(
         '/cameras/:id',
         async ({ params }) => {
             const camera = await db
-                .select()
+                .select({
+                    id: cameraTable.id,
+                    name: cameraTable.name,
+                    brand: brandTable.name,
+                    sensor: sensorTable.name,
+                    price: cameraTable.price,
+                    megapixels: cameraTable.megapixels,
+                    image: cameraTable.image
+                })
                 .from(cameraTable)
+                .leftJoin(brandTable, eq(cameraTable.brand_id, brandTable.id))
+                .leftJoin(
+                    sensorTable,
+                    eq(cameraTable.sensor_id, sensorTable.id)
+                )
                 .where(eq(cameraTable.id, params.id))
                 .limit(1)
 

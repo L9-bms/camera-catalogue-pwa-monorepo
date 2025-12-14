@@ -1,10 +1,11 @@
 'use client'
 
+import type { BrandsData, SensorsData } from '@libs/api/utility'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 interface FilterControlsProps {
-    brands: string[]
-    sensors: string[]
+    brands: BrandsData | null
+    sensors: SensorsData | null
     currentBrand?: string
     currentSensor?: string
     currentSortBy?: string
@@ -22,7 +23,7 @@ export function FilterControls({
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    const handleFilterChange = (key: string, value: string | undefined) => {
+    const updateParams = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams.toString())
 
         if (value && value !== '') {
@@ -45,11 +46,8 @@ export function FilterControls({
                     <select
                         className="select select-bordered w-full"
                         value={currentSortBy || 'name'}
-                        onChange={(e) =>
-                            handleFilterChange('sortBy', e.target.value)
-                        }
+                        onChange={(e) => updateParams('sortBy', e.target.value)}
                     >
-                        <option value="brand">Brand</option>
                         <option value="price">Price</option>
                         <option value="megapixels">Megapixels</option>
                         <option value="name">Name</option>
@@ -63,7 +61,7 @@ export function FilterControls({
                         className="select select-bordered w-full"
                         value={currentSortOrder || 'asc'}
                         onChange={(e) =>
-                            handleFilterChange(
+                            updateParams(
                                 'sortOrder',
                                 e.target.value as 'asc' | 'desc'
                             )
@@ -85,16 +83,16 @@ export function FilterControls({
                     <select
                         className="select select-bordered w-full"
                         value={currentBrand || ''}
-                        onChange={(e) =>
-                            handleFilterChange('brand', e.target.value)
-                        }
+                        onChange={(e) => updateParams('brand', e.target.value)}
+                        disabled={!brands}
                     >
-                        <option value="">All Brands</option>
-                        {brands.map((brand) => (
-                            <option key={brand} value={brand}>
-                                {brand}
-                            </option>
-                        ))}
+                        <option value="">All</option>
+                        {brands &&
+                            brands.map((brand) => (
+                                <option key={brand.id} value={brand.id}>
+                                    {brand.name}
+                                </option>
+                            ))}
                     </select>
                 </div>
                 <div className="form-control">
@@ -104,16 +102,16 @@ export function FilterControls({
                     <select
                         className="select select-bordered w-full"
                         value={currentSensor || ''}
-                        onChange={(e) =>
-                            handleFilterChange('sensor', e.target.value)
-                        }
+                        onChange={(e) => updateParams('sensor', e.target.value)}
+                        disabled={!sensors}
                     >
-                        <option value="">All Sensor Types</option>
-                        {sensors.map((sensor) => (
-                            <option key={sensor} value={sensor}>
-                                {sensor}
-                            </option>
-                        ))}
+                        <option value="">All</option>
+                        {sensors &&
+                            sensors.map((sensor) => (
+                                <option key={sensor.id} value={sensor.id}>
+                                    {sensor.name}
+                                </option>
+                            ))}
                     </select>
                 </div>
             </div>

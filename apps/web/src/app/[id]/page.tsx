@@ -11,23 +11,29 @@ export default async function CameraPage({ params }: Props) {
     const { id } = await params
 
     const cameraResponse = await api.cameras({ id }).get()
-
     const data = cameraResponse.data
+
+    if (cameraResponse.error) {
+        return (
+            <div>
+                Error:
+                <pre>{JSON.stringify(cameraResponse.error, null, 2)}</pre>
+            </div>
+        )
+    }
 
     if (!data) return notFound()
 
     const specs = [
         { label: 'Brand', value: data.brand },
-        { label: 'Sensor', value: data.sensor || 'Not specified' },
+        { label: 'Sensor', value: data.sensor },
         {
             label: 'Megapixels',
-            value: data.megapixels ? `${data.megapixels} MP` : 'Not specified'
+            value: `${data.megapixels} MP`
         },
         {
             label: 'Price',
-            value: data.price
-                ? `$${data.price.toLocaleString()}`
-                : 'Not available'
+            value: `$${data.price.toLocaleString()}`
         }
     ]
 
@@ -41,10 +47,10 @@ export default async function CameraPage({ params }: Props) {
                             <img
                                 src={data.image}
                                 alt={data.name}
-                                className="max-w-lg w-full rounded-lg shadow-2xl"
+                                className="max-w-lg w-full rounded-lg"
                             />
                         ) : (
-                            <div className="max-w-lg w-full h-96 bg-base-300 rounded-lg shadow-2xl flex items-center justify-center">
+                            <div className="max-w-lg w-full h-96 bg-base-300 rounded-lg flex items-center justify-center">
                                 <span className="text-base-content/50 text-xl">
                                     No image available
                                 </span>
