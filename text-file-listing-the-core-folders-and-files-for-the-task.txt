@@ -1,0 +1,18 @@
+- /package.json
+- /apps/api [ElysiaJS backend with Drizzle ORM (node-postgres driver)]
+  - /package.json
+  - /src
+    - /database/schema.ts
+    - /index.ts
+- /apps/web [NextJS (React) frontend with Tailwind CSS + DaisyUI]
+  - /package.json
+  - /public [for assets and PWA icons]
+  - /src/app [NextJS app router]
+    - /manifest.ts [PWA JSON web manifest]
+    - /layout.tsx [Global layout]
+    - /page.tsx [Main catalogue page]
+  - /src/css
+    - /global.css
+- /packages/config [Shared Typescript and ESLint configuration]
+- /packages/libs [Eden Treaty End-to-end typesafety contract + utility types]
+

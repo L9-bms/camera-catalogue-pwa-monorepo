@@ -1,14 +1,13 @@
-# 古関 (Kozeki)
+# Camera Catalogue PWA
 
-![Kozeki UI](https://github.com/user-attachments/assets/d2e8ed87-9834-4b3e-b1ae-0d65671a190a)
+Catalogue for Task 1 Software Engineering
 
-Ready to deploy template Elysia-Next Bun monorepo:
+Based on Kozeki (Ready to deploy template Elysia-Next Bun monorepo)
 
 - Elysia w/ OpenAPI, OpenTelemetry
 - Bun workspace
 - Eden Treaty
 - Tailwind 4
-- Storybook w/ docgen
 - Eslint, Prettier, TypeScript
 - Full path alias w/ Eden Treaty
 - Unit test w/ Vitest, Bun
@@ -17,6 +16,7 @@ Ready to deploy template Elysia-Next Bun monorepo:
 - Docker
 - CI w/ GitHub Action
 
+Thank you ElysiaJS!
 
 ## Getting Started
 
