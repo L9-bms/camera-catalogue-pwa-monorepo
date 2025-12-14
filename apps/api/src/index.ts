@@ -16,6 +16,7 @@ export const app = new Elysia()
             origin: '*'
         })
     )
+    .get('/', () => 'Hello Elysia')
     .get(
         '/cameras',
         async ({ query }) => {
