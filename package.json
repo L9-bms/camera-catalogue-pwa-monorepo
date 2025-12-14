@@ -1,6 +1,6 @@
 {
-    "name": "kozeki",
-    "version": "0.0.0",
+    "name": "camera-catalogue-pwa",
+    "version": "1.0.0",
     "private": true,
     "scripts": {
         "dev": "bun scripts/run dev",

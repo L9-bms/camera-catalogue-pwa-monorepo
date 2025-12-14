@@ -1,24 +1,15 @@
 import { Elysia, t } from 'elysia'
-import { openapi, fromTypes } from '@elysiajs/openapi'
 import { cors } from '@elysiajs/cors'
 import { eq, ilike, or, and, SQL, sql } from 'drizzle-orm'
 
-import { otel } from '@api/modules'
+import { otel, oapi } from '@api/modules'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { cameraTable, brandTable, sensorTable } from './database/schema'
 
 const db = drizzle(process.env.DATABASE_URL!)
 
 export const app = new Elysia()
-    .use(
-        openapi({
-            references: fromTypes(
-                process.env.NODE_ENV === 'production'
-                    ? 'dist/src/index.d.ts'
-                    : 'src/index.ts'
-            )
-        })
-    )
+    .use(oapi)
     .use(otel)
     .use(
         cors({
