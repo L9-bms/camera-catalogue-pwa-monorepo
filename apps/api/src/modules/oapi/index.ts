@@ -11,6 +11,14 @@ export const oapi = openapi({
             title: 'Camera Catalogue API',
             description: 'Documentation for Camera Catalogue API',
             version: '1.0.0'
-        }
+        },
+        servers: [
+            {
+                url: 'https://swe.callumwong.com/api'
+            },
+            {
+                url: 'http://localhost:3001'
+            }
+        ]
     }
 })
