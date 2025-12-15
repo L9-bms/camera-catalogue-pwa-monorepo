@@ -1,4 +1,4 @@
-import { Suspense, type PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
 import type { Metadata } from 'next'
 
 import '@web/css/global.css'
@@ -15,7 +15,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <html lang="en">
             <body>
                 <Navigation />
-                <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+                {children}
             </body>
         </html>
     )

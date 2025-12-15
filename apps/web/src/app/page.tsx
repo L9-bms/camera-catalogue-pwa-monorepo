@@ -1,86 +1,57 @@
-'use client'
-
 import { api } from '@libs'
 import Link from 'next/link'
 import { FilterControls } from './_components/filter-controls'
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
-import { BrandsData, CamerasData, SensorsData } from '@libs/api/utility'
 
-export default function HomePage() {
-    const searchParams = useSearchParams()
-    const [camerasResponse, setCamerasResponse] = useState<CamerasData>([])
-    const [brandsResponse, setBrandsResponse] = useState<BrandsData>([])
-    const [sensorsResponse, setSensorsResponse] = useState<SensorsData>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+interface Props {
+    // no utility type helper to extract query type?
+    // TODO: maybe export the query schema and reuse it here
+    searchParams: Promise<Parameters<typeof api.cameras.get>[0]['query']>
+}
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true)
-                setError(null)
+export default async function HomePage({ searchParams }: Props) {
+    const resolvedParams = await searchParams
 
-                const queryParams = {
-                    brand: searchParams.get('brand') || undefined,
-                    sensor: searchParams.get('sensor') || undefined,
-                    sortBy:
-                        (searchParams.get('sortBy') as
-                            | 'price'
-                            | 'megapixels'
-                            | 'name') || 'name',
-                    sortOrder:
-                        (searchParams.get('sortOrder') as 'asc' | 'desc') ||
-                        'asc'
-                }
+    const camerasResponse = await api.cameras.get({
+        query: resolvedParams
+    })
+    const brandsResponse = await api.cameras.brands.get()
+    const sensorsResponse = await api.cameras.sensors.get()
 
-                const cameras = await api.cameras.get({ query: queryParams })
-                const brands = await api.cameras.brands.get()
-                const sensors = await api.cameras.sensors.get()
-
-                setCamerasResponse(cameras.data || [])
-                setBrandsResponse(brands.data || [])
-                setSensorsResponse(sensors.data || [])
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Unknown error')
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        fetchData()
-    }, [searchParams])
+    const data = camerasResponse.data
 
     // prettier-ignore
-    if (error) {
+    if (camerasResponse.error || brandsResponse.error || sensorsResponse.error) {
         return <div>
-            Error: {error}
+            Error:
+            <pre>
+                {JSON.stringify({
+                    cameras: camerasResponse.error,
+                    brands: brandsResponse.error,
+                    sensors: sensorsResponse.error
+                }, null, 2)}
+            </pre>
         </div>
     }
 
-    if (loading)
-        return <div className="container mx-auto px-4 py-8">Loading...</div>
+    if (!data) return 'Loading...'
 
     return (
         <main className="container mx-auto px-4 py-8">
             <div className="flex flex-col lg:flex-row gap-8">
                 <aside className="lg:w-64 shrink-0">
                     <FilterControls
-                        brands={brandsResponse}
-                        sensors={sensorsResponse}
-                        currentBrand={searchParams.get('brand') || undefined}
-                        currentSensor={searchParams.get('sensor') || undefined}
-                        currentSortBy={searchParams.get('sortBy') || undefined}
-                        currentSortOrder={
-                            (searchParams.get('sortOrder') as 'asc' | 'desc') ||
-                            undefined
-                        }
+                        brands={brandsResponse.data}
+                        sensors={sensorsResponse.data}
+                        currentBrand={resolvedParams.brand}
+                        currentSensor={resolvedParams.sensor}
+                        currentSortBy={resolvedParams.sortBy}
+                        currentSortOrder={resolvedParams.sortOrder}
                     />
                 </aside>
 
                 <div className="flex-1">
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                        {camerasResponse.map((camera) => (
+                        {data.map((camera) => (
                             <div key={camera.id} className="card card-border">
                                 <figure>
                                     {/* eslint-disable-next-line @next/next/no-img-element */}

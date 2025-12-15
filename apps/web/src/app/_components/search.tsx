@@ -5,11 +5,17 @@ import { useRouter } from 'next/navigation'
 import { useDebounceCallback } from 'usehooks-ts'
 import { api } from '@libs'
 import Link from 'next/link'
-import { CameraSearchData } from '@libs/api/utility'
+
+// idk how to infer the type of query result from eden treaty
+// i could do that kind of thing in tRPC, can't find it for elysia
+interface CameraSearchResult {
+    id: string
+    name: string
+}
 
 export function Search() {
     const [searchQuery, setSearchQuery] = useState('')
-    const [results, setResults] = useState<CameraSearchData>([])
+    const [results, setResults] = useState<CameraSearchResult[]>([])
     const [isLoading, setIsLoading] = useState(false)
     const inputRef = useRef<HTMLDetailsElement>(null)
     const router = useRouter()

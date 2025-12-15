@@ -1,44 +1,28 @@
-'use client'
-
 import { api } from '@libs'
-import { CamerasData } from '@libs/api/utility'
-import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { notFound } from 'next/navigation'
 
-export default function CameraPage() {
-    const params = useParams()
-    const [data, setData] = useState<CamerasData[number] | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+interface Props {
+    params: Promise<{
+        id: string
+    }>
+}
 
-    useEffect(() => {
-        const fetchCamera = async () => {
-            try {
-                setLoading(true)
-                setError(null)
+export default async function CameraPage({ params }: Props) {
+    const { id } = await params
 
-                const id = params.id as string
-                const camera = await api.cameras({ id }).get()
+    const cameraResponse = await api.cameras({ id }).get()
+    const data = cameraResponse.data
 
-                setData(camera.data || null)
-            } catch (err) {
-                setError(err instanceof Error ? err.message : 'Unknown error')
-            } finally {
-                setLoading(false)
-            }
-        }
-
-        if (params.id) {
-            fetchCamera()
-        }
-    }, [params.id])
-
-    if (error) {
-        return <div>Error: {error}</div>
+    if (cameraResponse.error) {
+        return (
+            <div>
+                Error:
+                <pre>{JSON.stringify(cameraResponse.error, null, 2)}</pre>
+            </div>
+        )
     }
 
-    if (loading || !data)
-        return <div className="container mx-auto px-4 py-8">Loading...</div>
+    if (!data) return notFound()
 
     const specs = [
         { label: 'Brand', value: data.brand },
